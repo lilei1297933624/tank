@@ -11,8 +11,9 @@ public class TankFrame extends Frame {
 
     Tank myTank = new Tank(200,200,Dir.DOWN);
     Bullet bullet = new Bullet(300,300,Dir.DOWN);
+    static final int GAME_WIDTH = 800,GAME_HEIGHT = 600;
     public TankFrame()  {
-        this.setSize(800,600);
+        this.setSize(GAME_WIDTH,GAME_HEIGHT);
         this.setResizable(false);
         this.setTitle("tank war");
         this.setVisible(true);
@@ -31,8 +32,22 @@ public class TankFrame extends Frame {
     public void paint(Graphics g) {
         myTank.paint(g);
         bullet.paint(g);
-//        x += 10;
-//        y += 10;
+    }
+
+    Image offScreenImage = null;
+    @Override
+    public void update(Graphics g) {
+        super.update(g);
+        if(offScreenImage == null){
+            offScreenImage = this.createImage(GAME_WIDTH,GAME_HEIGHT);
+        }
+        Graphics graphics = offScreenImage.getGraphics();
+        Color color = graphics.getColor();
+        graphics.setColor(Color.BLACK);
+        graphics.fillRect(0,0,GAME_WIDTH,GAME_HEIGHT);
+        graphics.setColor(color);
+        paint(graphics);
+        g.drawImage(offScreenImage,0,0,null);
     }
 
     class MyKeyListener extends KeyAdapter {
